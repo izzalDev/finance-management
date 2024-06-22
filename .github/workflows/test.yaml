@@ -1,9 +1,9 @@
-name: test
+name: Test
 
 on: [push, pull_request]
 
 jobs:
-  test-application:
+  test:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
