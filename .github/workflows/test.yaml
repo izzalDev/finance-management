@@ -19,17 +19,23 @@ jobs:
         run: flutter --version
 
       - name: Run Flutter test
-        run: flutter test
+        run: |
+          flutter pub get
+          flutter test
 
       - name: Build android apk
         run: |
           flutter pub get
           flutter build apk
 
+      - name: Get git short sha
+        id: get_sha
+        run: echo "sha_short=$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
+
       - name: Upload artifact
         uses: actions/upload-artifact@v3
         with:
-          name: finance-management@${{ github.head_ref }}
+          name: finance-management@${{ steps.get_sha.outputs.sha_short }}
           path: build/app/outputs/flutter-apk/app-release.apk
 
       - name: Clean up build files
