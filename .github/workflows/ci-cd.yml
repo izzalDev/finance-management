@@ -96,7 +96,7 @@ jobs:
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
           asset_path: build/app/outputs/flutter-apk/app-release.apk
-          asset_name: finance_management_${{ github.ref }}.apk
+          asset_name: finance_management_v${{ steps.get_version.outputs.VERSION}}.apk
           asset_content_type: application/zip
 
       - name: Clean up build files
