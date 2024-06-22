@@ -75,8 +75,9 @@ jobs:
       - name: Get Release Note from Changelog
         run: |
           TAG_VERSION=${{ steps.get_version.outputs.VERSION }}
-          awk -v tag="v$TAG_VERSION" '/^## /{p=0} $0 ~ "^## " tag{p=1} p' CHANGELOG.md > release_note.txt
+          awk -v tag="$TAG_VERSION" '/^## /{p=0} $0 ~ "^## " tag{p=1} p' CHANGELOG.md > release_note.txt
           cat release_note.txt
+
 
       - name: Create Release
         id: create_release
