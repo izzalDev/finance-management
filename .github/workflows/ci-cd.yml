@@ -86,7 +86,6 @@ jobs:
         with:
           tag_name: ${{ github.ref }}
           release_name: Release ${{ github.ref }}
-          body_path: release_note.txt
 
       - name: Upload Release Asset
         id: upload-release-asset
