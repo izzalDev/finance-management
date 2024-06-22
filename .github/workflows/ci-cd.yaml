@@ -58,10 +58,14 @@ jobs:
       - name: Check out code
         uses: actions/checkout@v4
 
+      - name: Get git short sha
+        id: get_sha
+        run: echo "sha_short=$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
+
       - name: Download artifact from test job
         uses: actions/download-artifact@v3
         with:
-          name: finance-management-${{ needs.test.outputs.get_sha.outputs.sha_short }}.apk
+          name: finance-management-${{ steps.get_sha.outputs.sha_short }}.apk
           path: build/app/outputs/flutter-apk
 
       - name: Get version from tag
