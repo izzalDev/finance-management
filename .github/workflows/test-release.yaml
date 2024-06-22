@@ -1,0 +1,104 @@
+name: Test and Release
+
+on:
+  push:
+    branches: '*'
+    tags:
+      - 'v[0-9]+.[0-9]+.[0-9]+'
+  pull_request:
+    branches: '*'
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          flutter-version-file: pubspec.yaml
+
+      - name: Check Flutter version
+        run: flutter --version
+
+      - name: Run Flutter test
+        run: |
+          flutter pub get
+          flutter test
+
+      - name: Build android apk
+        run: |
+          flutter pub get
+          flutter build apk
+
+      - name: Get git short sha
+        id: get_sha
+        run: echo "sha_short=$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: finance-management-${{ steps.get_sha.outputs.sha_short }}.apk
+          path: build/app/outputs/flutter-apk/app-release.apk
+
+      - name: Clean up build files
+        run: |
+          rm -rf build
+          echo "Cleaned up build files"
+
+  release:
+    needs: test
+    if: startsWith(github.ref, 'refs/tags/v')
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v4
+
+      - name: Get git short sha
+        id: get_sha
+        run: echo "sha_short=$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
+
+      - name: Download artifact from test job
+        uses: actions/download-artifact@v4
+        with:
+          name: finance-management-${{ steps.get_sha.outputs.sha_short }}.apk
+          path: build/app/outputs/flutter-apk
+
+      - name: Get version from tag
+        id: get_version
+        run: echo "VERSION=${GITHUB_REF#refs/tags/v}" >> $GITHUB_OUTPUT
+
+      - name: Get Release Note from Changelog
+        run: |
+          TAG_VERSION=${{ steps.get_version.outputs.VERSION }}
+          awk -v tag="v$TAG_VERSION" '/^## /{p=0} $0 ~ "^## " tag{p=1} p' CHANGELOG.md > release_note.txt
+          cat release_note.txt
+
+      - name: Create Release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ github.ref }}
+          release_name: Release ${{ github.ref }}
+          body_path: release_note.txt
+
+      - name: Upload Release Asset
+        id: upload-release-asset
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: build/app/outputs/flutter-apk/app-release.apk
+          asset_name: finance_management_${{ github.ref }}.apk
+          asset_content_type: application/zip
+
+      - name: Clean up build files
+        run: |
+          rm -rf build
