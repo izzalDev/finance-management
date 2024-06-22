@@ -91,8 +91,7 @@ jobs:
       with:
         tag_name: ${{ github.ref }}
         release_name: Release ${{ github.ref }}
-        body_path: extracted-changelog.txt
-
+        body: Halo ini release
     - name: Upload Release Asset
       id: upload-release-asset
       uses: actions/upload-release-asset@v1
