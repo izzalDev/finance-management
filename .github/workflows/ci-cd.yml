@@ -80,6 +80,10 @@ jobs:
           cat release-note.txt
           chmod 444 release-note.txt
 
+      - name: Checking Release Note
+        run: |
+          cat release-note.txt
+
       - name: Create Release
         id: create_release
         uses: actions/create-release@v1
