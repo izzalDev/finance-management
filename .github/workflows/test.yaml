@@ -1,0 +1,39 @@
+name: test
+
+on: [push, pull_request]
+
+jobs:
+  test-application:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Flutter
+        uses: subosito/flutter-actions@v2
+        with:
+          channel: stable
+          flutter-version-file: pubspec.yaml
+
+      - name: Check Flutter version
+        run: flutter --version
+
+      - name: Run Flutter test
+        run: flutter test
+
+      - name: Build android apk
+        run: |
+          flutter pub get
+          flutter build apk
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: finance-management@${{ GITHUB_SHA }}
+          path: build/app/outputs/flutter-apk/app-release.apk
+
+      - name: Clean up build files
+        run: |
+            rm -rf build
+            echo "Cleaned up build files"
+
