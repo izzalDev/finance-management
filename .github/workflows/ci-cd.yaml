@@ -63,7 +63,7 @@ jobs:
         run: echo "sha_short=$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
 
       - name: Download artifact from test job
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: finance-management-${{ steps.get_sha.outputs.sha_short }}.apk
           path: build/app/outputs/flutter-apk
