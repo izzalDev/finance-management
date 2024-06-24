@@ -69,7 +69,11 @@ jobs:
           path: release_assets/
 
       - name: Check artifact location
-        run: ls
+        run: |
+          ls
+          cd release_assets
+          echo "====================="
+          ls
 
       - name: Get version from tag
         id: get_version
