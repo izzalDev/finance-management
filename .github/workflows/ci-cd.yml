@@ -81,7 +81,9 @@ jobs:
       - name: Check assets
         run: |
           ls
-          ls ${{ github.workspace }}
+
+      - name: Check folder
+        run: ls finance_management_v${{ steps.get_version.outputs.VERSION }}.apk
 
       - name: Create Release
         id: create_release
