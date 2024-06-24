@@ -79,7 +79,9 @@ jobs:
           cat release_note.txt
 
       - name: Check assets
-        run: ls
+        run: |
+          ls
+          ls ${{ github.workspace }}
 
       - name: Create Release
         uses: softprops/action-gh-release@v2
