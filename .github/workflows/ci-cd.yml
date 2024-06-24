@@ -66,37 +66,30 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: finance-management-${{ steps.get_sha.outputs.sha_short }}.apk
-          path: build/app/outputs/flutter-apk
+          path: release_assets/
 
       - name: Get version from tag
         id: get_version
         run: echo "VERSION=${GITHUB_REF#refs/tags/v}" >> $GITHUB_OUTPUT
 
+      - name: Rename Release Assets
+        run: |
+          mv release_assets/finance-management-${{ steps.get_sha.outputs.sha_short }}.apk release_assets/finance_management_v${{ steps.get_version.outputs.VERSION }}.apk
+
       - name: Get Release Note from Changelog
         run: |
           TAG_VERSION=${{ steps.get_version.outputs.VERSION }}
-          awk -v tag="v$TAG_VERSION" '/^## /{p=0} $0 ~ "^## " tag{p=1} p' CHANGELOG.md > release_note.txt
-          cat release_note.txt
+          awk -v tag="$TAG_VERSION" '/^## /{p=0} $0 ~ "^## " tag{p=1} p' CHANGELOG.md > ${{ github.workspace }}-CHANGELOG.txt
+          awk 'NR>1' ${{ github.workspace }}-CHANGELOG.txt > ${{ github.workspace }}-CHANGELOG.txt
+          cat ${{ github.workspace }}-CHANGELOG.txt
 
       - name: Create Release
-        id: create_release
-        uses: actions/create-release@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        uses: softprops/action-gh-release@v2
         with:
           tag_name: ${{ github.ref }}
-          release_name: Release ${{ github.ref }}
-
-      - name: Upload Release Asset
-        id: upload-release-asset
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: build/app/outputs/flutter-apk/app-release.apk
-          asset_name: finance_management_${{ github.ref }}.apk
-          asset_content_type: application/zip
+          name: Release v${{ steps.get_version.outputs.VERSION }}
+          body_path: ${{ github.workspace }}-CHANGELOG.txt
+          files: release_assets/finance_management_v${{ steps.get_version.outputs.VERSION }}.apk
 
       - name: Clean up build files
         run: |
