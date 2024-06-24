@@ -70,7 +70,7 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: finance-management-${{ steps.get_sha.outputs.sha_short }}.apk
-          path: finance_management_v${{ steps.get_version.outputs.VERSION }}.apk
+          path: ./
 
       - name: Get Release Note from Changelog
         run: |
@@ -82,8 +82,12 @@ jobs:
         run: |
           ls
 
-      - name: Check folder
-        run: ls finance_management_v${{ steps.get_version.outputs.VERSION }}.apk
+      - name: Rename release assets
+        run: |
+          ls
+          mv finance-management-${{ steps.get_sha.outputs.sha_short }}.apk finance_management_v${{ steps.get_version.outputs.VERSION }}.apk
+          echo "==================================="
+          ls
 
       - name: Create Release
         id: create_release
@@ -92,17 +96,7 @@ jobs:
           tag_name: ${{ github.ref }}
           name: Release v${{ steps.get_version.outputs.VERSION }}
           body_path: release_note.txt
-
-      - name: Upload Release Asset
-        id: upload-release-asset 
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./finance_management_v${{ steps.get_version.outputs.VERSION }}.apk
-          asset_name: finance_management_v${{ steps.get_version.outputs.VERSION }}.apk
-          asset_content_type: application/zip
+          files: finance_management_v${{ steps.get_version.outputs.VERSION }}.apk
 
       - name: Clean up build files
         run: |
