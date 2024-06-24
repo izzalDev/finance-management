@@ -62,11 +62,15 @@ jobs:
         id: get_sha
         run: echo "sha_short=$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
 
+      - name: Get version from tag
+        id: get_version
+        run: echo "VERSION=${GITHUB_REF#refs/tags/v}" >> $GITHUB_OUTPUT
+
       - name: Download artifact from test job
         uses: actions/download-artifact@v4
         with:
           name: finance-management-${{ steps.get_sha.outputs.sha_short }}.apk
-          path: release_assets/
+          path: finance_management_v${{ steps.get_version.outputs.VERSION }}.apk
 
       - name: Check artifact location
         run: |
@@ -74,14 +78,6 @@ jobs:
           cd release_assets
           echo "====================="
           ls
-
-      - name: Get version from tag
-        id: get_version
-        run: echo "VERSION=${GITHUB_REF#refs/tags/v}" >> $GITHUB_OUTPUT
-
-      - name: Rename Release Assets
-        run: |
-          mv release_assets/finance-management-${{ steps.get_sha.outputs.sha_short }}.apk release_assets/finance_management_v${{ steps.get_version.outputs.VERSION }}.apk
 
       - name: Get Release Note from Changelog
         run: |
@@ -96,7 +92,7 @@ jobs:
           tag_name: ${{ github.ref }}
           name: Release v${{ steps.get_version.outputs.VERSION }}
           body_path: ${{ github.workspace }}-CHANGELOG.txt
-          files: release_assets/finance_management_v${{ steps.get_version.outputs.VERSION }}.apk
+          files: finance_management_v${{ steps.get_version.outputs.VERSION }}.apk
 
       - name: Clean up build files
         run: |
