@@ -41,7 +41,7 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
-          name: finance-management-${{ steps.get_sha.outputs.sha_short }}.apk
+          name: finance-management-${{ steps.get_sha.outputs.sha_short }}.zip
           path: build/app/outputs/flutter-apk/app-release.apk
 
       - name: Clean up build files
@@ -69,7 +69,7 @@ jobs:
       - name: Download artifact from test job
         uses: actions/download-artifact@v4
         with:
-          name: finance-management-${{ steps.get_sha.outputs.sha_short }}.apk
+          name: finance-management-${{ steps.get_sha.outputs.sha_short }}.zip
           path: ./
 
       - name: Get Release Note from Changelog
@@ -85,7 +85,7 @@ jobs:
       - name: Rename release assets
         run: |
           ls
-          mv finance-management-${{ steps.get_sha.outputs.sha_short }}.apk finance_management_v${{ steps.get_version.outputs.VERSION }}.apk
+          mv app-release.apk finance_management_v${{ steps.get_version.outputs.VERSION }}.apk
           echo "==================================="
           ls
 
