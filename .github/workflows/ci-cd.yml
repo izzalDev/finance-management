@@ -72,13 +72,6 @@ jobs:
           name: finance-management-${{ steps.get_sha.outputs.sha_short }}.apk
           path: finance_management_v${{ steps.get_version.outputs.VERSION }}.apk
 
-      - name: Check artifact location
-        run: |
-          ls
-          cd release_assets
-          echo "====================="
-          ls
-
       - name: Get Release Note from Changelog
         run: |
           TAG_VERSION=${{ steps.get_version.outputs.VERSION }}
