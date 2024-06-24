@@ -68,6 +68,9 @@ jobs:
           name: finance-management-${{ steps.get_sha.outputs.sha_short }}.apk
           path: release_assets/
 
+      - name: Check artifact location
+        run: ls
+
       - name: Get version from tag
         id: get_version
         run: echo "VERSION=${GITHUB_REF#refs/tags/v}" >> $GITHUB_OUTPUT
