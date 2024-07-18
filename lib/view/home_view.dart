@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:finance_management/model/transaction.dart';
 import 'package:finance_management/repository/transaction_repository.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -18,6 +20,14 @@ class HomeView extends StatefulWidget {
 class HomeViewState extends State<HomeView> {
   @override
   Widget build(BuildContext context) {
+    TransactionRepository().add(Transaction(
+      amount: 10000,
+      category: 'Income',
+      date: DateTime.now(),
+      description: 'Salary',
+      name: 'Salary',
+      photo: 'https://i.pravatar.cc/50',
+    ));
     return Scaffold(
       appBar: PreferredSize(
         preferredSize: const Size.fromHeight(80),
@@ -106,27 +116,26 @@ class HomeViewState extends State<HomeView> {
                 ),
                 const SizedBox(height: 8),
                 StreamBuilder<List<Transaction>>(
-                  stream: TransactionRepository().getAllTransactions(),
-                  builder: (context, snapshot){
-                    if(snapshot.connectionState == ConnectionState.waiting){
-                      return const CircularProgressIndicator();
-                    } else {
-                      List<Transaction> transactions = snapshot.data!;
-                      int balance = 0;
-                      for(Transaction transaction in transactions){
-                        balance += transaction.amount;
+                    stream: TransactionRepository().getAllTransactions(),
+                    builder: (context, snapshot) {
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return const CircularProgressIndicator();
+                      } else {
+                        List<Transaction> transactions = snapshot.data!;
+                        int balance = 0;
+                        for (Transaction transaction in transactions) {
+                          balance += transaction.amount;
+                        }
+                        return Text(
+                          _formatCurrency(balance),
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontSize: 24,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        );
                       }
-                      return Text(
-                        formatCurrency(balance),
-                        style: const TextStyle(
-                          color: Colors.white,
-                          fontSize: 24,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      );
-                    }
-                  }
-                )
+                    })
               ],
             ),
           ),
@@ -145,11 +154,16 @@ class HomeViewState extends State<HomeView> {
                       itemBuilder: (context, index) {
                         int amount = transactions[index].amount;
                         DateTime date = transactions[index].date;
-                        return TransactionItem(
-                            category: transactions[index].category,
-                            title: transactions[index].name,
-                            date: formatDate(date),
-                            amount: formatCurrency(amount));
+                        return GestureDetector(
+                          onLongPress: () {
+                            _showBottomDrawer(context, transactions[index].id);
+                          },
+                          child: TransactionItem(
+                              category: transactions[index].category,
+                              title: transactions[index].name,
+                              date: _formatDate(date),
+                              amount: _formatCurrency(amount)),
+                        );
                       },
                     );
                   }
@@ -160,7 +174,7 @@ class HomeViewState extends State<HomeView> {
     );
   }
 
-  String formatCurrency(int amount) {
+  String _formatCurrency(int amount) {
     final NumberFormat currencyFormatter = NumberFormat.currency(
       locale: 'id_ID',
       symbol: 'Rp',
@@ -169,11 +183,41 @@ class HomeViewState extends State<HomeView> {
     return currencyFormatter.format(amount);
   }
 
-  String formatDate(DateTime dateTime) {
+  String _formatDate(DateTime dateTime) {
     // Format tanggal ke format "19 Juli 2024"
     final DateFormat dateFormatter = DateFormat('d MMMM yyyy', 'id_ID');
     return dateFormatter.format(dateTime);
   }
+
+  void _showBottomDrawer(BuildContext context, String id) {
+    showModalBottomSheet(
+      context: context,
+      builder: (BuildContext context) {
+        return Container(
+          width: double.infinity,
+          height: 200,
+          child: ListView(
+            children: [
+              const SizedBox(height: 10),
+              ListTile(
+                leading: const Icon(Icons.edit),
+                title: const Text('Edit'),
+                onTap: () {
+                  Navigator.pop(context);
+                },
+              ),
+              ListTile(
+                leading: const Icon(Icons.delete),
+                title: const Text('Delete'),
+                onTap: () {
+                  TransactionRepository().delete(id);
+                  Navigator.pop(context);
+                },
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
 }
-
-

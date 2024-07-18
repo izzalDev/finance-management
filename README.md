@@ -21,7 +21,7 @@ The Financial Management App is a Flutter-based application designed to help use
 - **Edit and Delete Transactions**
   - [ ] Long tap on a transaction item to display the contextual menu for editing or deleting.
   - [ ] Edit transaction details with a pre-populated form and save changes to the server.
-  - [ ] Delete transaction data from the server.
+  - [x] Delete transaction data from the server.
 
 ## Installation (APK)
 
