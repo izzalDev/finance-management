@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "325412050603",
+    "project_id": "izzaldev-finance-management",
+    "storage_bucket": "izzaldev-finance-management.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:325412050603:android:d00a45d27666ce490289ee",
+        "android_client_info": {
+          "package_name": "com.github.izzalDev.finance_management"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB_uXWxH07bdm9zROp8OcL4BrJQo4Db7BA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
