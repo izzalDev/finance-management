@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:finance_management/view/home_view.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'dart:developer';
@@ -5,11 +7,13 @@ import 'dart:developer';
 class RegisterView extends StatelessWidget {
   RegisterView({super.key});
   final FirebaseAuth auth = FirebaseAuth.instance;
+  final FirebaseFirestore firestore = FirebaseFirestore.instance;
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _phoneController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
-  final TextEditingController _confirmPasswordController = TextEditingController();
+  final TextEditingController _confirmPasswordController =
+      TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -65,6 +69,7 @@ class RegisterView extends StatelessWidget {
                             ),
                             TextField(
                               controller: _emailController,
+                              keyboardType: TextInputType.emailAddress,
                               decoration: const InputDecoration(
                                 icon: Icon(Icons.email_outlined),
                                 labelText: 'Email',
@@ -72,6 +77,7 @@ class RegisterView extends StatelessWidget {
                             ),
                             TextField(
                               controller: _phoneController,
+                              keyboardType: TextInputType.phone,
                               decoration: const InputDecoration(
                                 icon: Icon(Icons.phone_outlined),
                                 labelText: 'Nomor Telepon',
@@ -136,7 +142,7 @@ class RegisterView extends StatelessWidget {
   void _register(BuildContext context) async {
     final String name = _nameController.text;
     final String email = _emailController.text;
-    // final String phone = _phoneController.text;
+    final String phone = _phoneController.text;
     final String password = _passwordController.text;
     final String confirmPassword = _confirmPasswordController.text;
 
@@ -153,13 +159,20 @@ class RegisterView extends StatelessWidget {
       );
 
       await userCredential.user?.updateDisplayName(name);
-      // await userCredential.user?.updatePhoneNumber(phone as PhoneAuthCredential);
       await userCredential.user?.reload();
       final User? user = auth.currentUser;
 
       if (user != null) {
+        await firestore.collection('users').doc(user.uid).set({
+          'name': name,
+          'email': email,
+          'phone': phone,
+          'uid': user.uid,
+          'createdAt': DateTime.now().toIso8601String(),
+        });
         log('User registered successfully: ${user.uid}');
         _showMessage(context, 'Registrasi berhasil');
+        Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => HomeView(accountInfo: user)));
       }
     } on FirebaseAuthException catch (e) {
       if (e.code == 'email-already-in-use') {
