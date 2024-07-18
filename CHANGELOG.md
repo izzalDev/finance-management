@@ -1,10 +1,15 @@
 # CHANGELOG.md
 
-## 1.0.2 (WIP)
+## 1.0.0 (WIP)
 
 ### **Added :**
 
 - Login feature implementation
+- Register feature implementation
+
+### **Fix :**
+
+- No message on authentication invalid
 
 ## 0.1.25 (2024-7-22)
 
