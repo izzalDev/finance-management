@@ -3,6 +3,7 @@ import 'package:finance_management/repository/transaction_repository.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:finance_management/widget/transaction_item.dart';
+import 'package:flutter/widgets.dart';
 import 'package:intl/intl.dart';
 
 class HomeView extends StatefulWidget {
@@ -92,10 +93,10 @@ class HomeViewState extends State<HomeView> {
               color: Colors.lightBlue,
               borderRadius: BorderRadius.circular(30),
             ),
-            child: const Column(
+            child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
+                const Text(
                   'Saldo Anda saat ini',
                   style: TextStyle(
                     color: Colors.white,
@@ -103,15 +104,29 @@ class HomeViewState extends State<HomeView> {
                     fontSize: 20,
                   ),
                 ),
-                SizedBox(height: 8),
-                Text(
-                  'Rp 15.000.000',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 28,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
+                const SizedBox(height: 8),
+                StreamBuilder<List<Transaction>>(
+                  stream: TransactionRepository().getAllTransactions(),
+                  builder: (context, snapshot){
+                    if(snapshot.connectionState == ConnectionState.waiting){
+                      return const CircularProgressIndicator();
+                    } else {
+                      List<Transaction> transactions = snapshot.data!;
+                      int balance = 0;
+                      for(Transaction transaction in transactions){
+                        balance += transaction.amount;
+                      }
+                      return Text(
+                        formatCurrency(balance),
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 24,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      );
+                    }
+                  }
+                )
               ],
             ),
           ),
@@ -146,18 +161,19 @@ class HomeViewState extends State<HomeView> {
   }
 
   String formatCurrency(int amount) {
-  final NumberFormat currencyFormatter = NumberFormat.currency(
-    locale: 'id_ID',
-    symbol: 'Rp',
-    decimalDigits: 0,
-  );
+    final NumberFormat currencyFormatter = NumberFormat.currency(
+      locale: 'id_ID',
+      symbol: 'Rp',
+      decimalDigits: 0,
+    );
+    return currencyFormatter.format(amount);
+  }
 
-  return currencyFormatter.format(amount);
-}
-
-String formatDate(DateTime dateTime) {
+  String formatDate(DateTime dateTime) {
     // Format tanggal ke format "19 Juli 2024"
     final DateFormat dateFormatter = DateFormat('d MMMM yyyy', 'id_ID');
     return dateFormatter.format(dateTime);
   }
 }
+
+
