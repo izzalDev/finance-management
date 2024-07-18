@@ -1,3 +1,4 @@
+import 'package:finance_management/view/register_view.dart';
 import 'package:finance_management/widget/divider_text.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -66,7 +67,8 @@ class LoginView extends StatelessWidget {
                     const SizedBox(height: 20),
                     ElevatedButton(
                       onPressed: () {
-                        _login(_emailController.text, _passwordController.text);
+                        _login(context, _emailController.text,
+                            _passwordController.text);
                       },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.blue,
@@ -89,7 +91,14 @@ class LoginView extends StatelessWidget {
                     ),
                     const DividerText(text: 'or'),
                     ElevatedButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => RegisterView(),
+                          ),
+                        );
+                      },
                       style: ElevatedButton.styleFrom(
                         foregroundColor: Colors.blue,
                         shape: RoundedRectangleBorder(
@@ -121,16 +130,26 @@ class LoginView extends StatelessWidget {
     );
   }
 
-  void _login(String email, String password) async {
+  void _login(BuildContext context, String email, String password) async {
     try {
       await auth.signInWithEmailAndPassword(email: email, password: password);
       log('Login successfully');
     } on FirebaseAuthException catch (e) {
       if (e.code == 'user-not-found') {
         log('No user found for that email.');
+        _showMessage(context, 'email atau password tidak valid');
       } else if (e.code == 'wrong-password') {
         log('Wrong password provided for that user.');
+        _showMessage(context, 'email atau password tidak valid');
       }
     }
+  }
+
+  void _showMessage(BuildContext context, String message) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(message),
+      ),
+    );
   }
 }
