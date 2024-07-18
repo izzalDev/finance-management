@@ -1,5 +1,11 @@
 # CHANGELOG.md
 
+## 1.0.2 (WIP)
+
+### **Added :**
+
+- Login feature implementation
+
 ## 0.1.25 (2024-7-22)
 
 [Full Changelog](https://github.com/izzalDev/izlearn/compare/v1.0.1...v1.0.2)
