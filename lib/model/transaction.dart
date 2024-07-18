@@ -9,6 +9,7 @@ class Transaction {
   String description;
   String name;
   String photo;
+  late String id;
 
   Transaction({
     required this.amount,
@@ -42,5 +43,3 @@ class Transaction {
         "photo": photo,
       };
 }
-
-

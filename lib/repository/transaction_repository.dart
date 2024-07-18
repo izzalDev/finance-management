@@ -41,9 +41,11 @@ class TransactionRepository {
         .collection('transactions')
         .orderBy('date', descending: true)
         .snapshots()
-        .map((snapshot) => snapshot.docs
-            .map((doc) => model.Transaction.fromJson(doc.data()))
-            .toList());
+        .map((snapshot) => snapshot.docs.map((doc) {
+              model.Transaction transaction = model.Transaction.fromJson(doc.data());
+              transaction.id = doc.id;
+              return transaction;
+        }).toList());
   }
 
   Future<bool> delete(String id) async {
