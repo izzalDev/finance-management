@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:finance_management/model/transaction.dart';
 import 'package:finance_management/repository/transaction_repository.dart';
+import 'package:finance_management/view/transaction_detail_view.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:finance_management/widget/transaction_item.dart';
@@ -146,6 +147,16 @@ class HomeViewState extends State<HomeView> {
                         int amount = transactions[index].amount;
                         DateTime date = transactions[index].date;
                         return GestureDetector(
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => TransactionDetailView(
+                                  transaction: transactions[index],
+                                ),
+                              ),
+                            );
+                          },
                           onLongPress: () {
                             _showBottomDrawer(context, transactions[index].id);
                           },
