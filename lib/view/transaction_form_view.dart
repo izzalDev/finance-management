@@ -47,9 +47,9 @@ class _TransactionFormViewState extends State<TransactionFormView> {
         backgroundColor: Colors.blue,
         foregroundColor: Colors.white,
         toolbarHeight: 100,
-        title: const Text(
-          'Tambah Transaksi',
-          style: TextStyle(
+        title: Text(
+          widget.transaction == null ? 'Transaksi Baru' : 'Ubah Transaksi',
+          style: const TextStyle(
             color: Colors.white,
             fontWeight: FontWeight.bold,
             fontSize: 24,
@@ -60,9 +60,9 @@ class _TransactionFormViewState extends State<TransactionFormView> {
         padding: const EdgeInsets.all(28),
         children: [
           const SizedBox(height: 20),
-          const Text(
-            'Transaksi Baru',
-            style: TextStyle(
+          Text(
+            widget.transaction == null ? 'Transaksi Baru' : 'Ubah Transaksi',
+            style: const TextStyle(
               fontSize: 24,
               fontWeight: FontWeight.bold,
             ),
@@ -163,9 +163,9 @@ class _TransactionFormViewState extends State<TransactionFormView> {
               height: 50,
               width: double.infinity,
               alignment: Alignment.center,
-              child: const Text(
-                'Tambah Transaksi',
-                style: TextStyle(
+              child: Text(
+                widget.transaction == null ? 'Buat Transaksi' : 'Ubah Transaksi',
+                style: const TextStyle(
                   fontSize: 20,
                   color: Colors.white,
                   fontWeight: FontWeight.bold,
@@ -217,7 +217,8 @@ class _TransactionFormViewState extends State<TransactionFormView> {
     if (widget.transaction == null) {
       TransactionRepository().add(transaction);
     } else {
-      TransactionRepository().update(transaction); // Assuming you have an update method
+      transaction.id = widget.transaction!.id;
+      TransactionRepository().update(transaction);
     }
 
     Navigator.pop(context);
