@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:finance_management/widget/transaction_item.dart';
 import 'package:flutter/widgets.dart';
 import 'package:intl/intl.dart';
+import 'package:finance_management/view/transaction_form_view.dart';
 
 class HomeView extends StatefulWidget {
   const HomeView({Key? key, required this.accountInfo}) : super(key: key);
@@ -20,69 +21,59 @@ class HomeView extends StatefulWidget {
 class HomeViewState extends State<HomeView> {
   @override
   Widget build(BuildContext context) {
-    TransactionRepository().add(Transaction(
-      amount: 10000,
-      category: 'Income',
-      date: DateTime.now(),
-      description: 'Salary',
-      name: 'Salary',
-      photo: 'https://i.pravatar.cc/50',
-    ));
     return Scaffold(
-      appBar: PreferredSize(
-        preferredSize: const Size.fromHeight(80),
-        child: Padding(
-          padding: const EdgeInsets.only(top: 20.0),
-          child: AppBar(
-            title: Row(
+      appBar: AppBar(
+        elevation: 4,
+        backgroundColor: Colors.white,
+        toolbarHeight: 100,
+        title: Row(
+          children: [
+            ClipRRect(
+              borderRadius: BorderRadius.circular(
+                  18), // Penyesuaian sedikit untuk memotong foto dengan baik
+              child: Image.network(
+                'https://i.pravatar.cc/50',
+                fit: BoxFit.cover,
+                width: 50,
+                height: 50,
+              ),
+            ),
+            const SizedBox(width: 16),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                ClipRRect(
-                  borderRadius: BorderRadius.circular(
-                      18), // Penyesuaian sedikit untuk memotong foto dengan baik
-                  child: Image.network(
-                    'https://i.pravatar.cc/50',
-                    fit: BoxFit.cover,
-                    width: 50,
-                    height: 50,
+                const Text(
+                  'Hi,',
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
                   ),
                 ),
-                const SizedBox(width: 16),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const Text(
-                      'Hi,',
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    Text(widget.accountInfo?.displayName ?? '',
-                        style: const TextStyle(
-                          fontSize: 24,
-                          fontWeight: FontWeight.bold,
-                        )),
-                  ],
-                )
+                Text(widget.accountInfo?.displayName ?? '',
+                    style: const TextStyle(
+                      fontSize: 24,
+                      fontWeight: FontWeight.bold,
+                    )),
               ],
-            ), // Update title to display account info
-            actions: [
-              IconButton(
-                icon: const Icon(
-                  Icons.logout,
-                  size: 32,
-                ),
-                onPressed: () {
-                  FirebaseAuth.instance.signOut();
-                },
-              ),
-            ],
+            )
+          ],
+        ), // Update title to display account info
+        actions: [
+          IconButton(
+            icon: const Icon(
+              Icons.logout,
+              size: 32,
+            ),
+            onPressed: () {
+              FirebaseAuth.instance.signOut();
+            },
           ),
-        ),
+        ],
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          // Tindakan yang diambil ketika FAB ditekan
-          print('Floating Action Button pressed');
+          Navigator.push(context, MaterialPageRoute(builder: (context) {
+            return const TransactionFormView();
+          }));
         },
         tooltip: 'Increment',
         child: const Icon(
