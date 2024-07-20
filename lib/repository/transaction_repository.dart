@@ -64,14 +64,14 @@ class TransactionRepository {
     }
   }
 
-  Future<bool> update(String id, model.Transaction transaction) async {
+  Future<bool> update(model.Transaction transaction) async {
     try {
       String uid = auth.currentUser!.uid;
       await firestore
           .collection('users')
           .doc(uid)
           .collection('transactions')
-          .doc(id)
+          .doc(transaction.id)
           .update(transaction.toJson());
       return true;
     } catch (e) {

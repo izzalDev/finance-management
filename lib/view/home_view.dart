@@ -158,7 +158,7 @@ class HomeViewState extends State<HomeView> {
                             );
                           },
                           onLongPress: () {
-                            _showBottomDrawer(context, transactions[index].id);
+                            _showBottomDrawer(context, transactions[index]);
                           },
                           child: TransactionItem(
                               category: transactions[index].category,
@@ -191,7 +191,7 @@ class HomeViewState extends State<HomeView> {
     return dateFormatter.format(dateTime);
   }
 
-  void _showBottomDrawer(BuildContext context, String id) {
+  void _showBottomDrawer(BuildContext context, Transaction transaction) {
     showModalBottomSheet(
       context: context,
       builder: (BuildContext context) {
@@ -205,14 +205,18 @@ class HomeViewState extends State<HomeView> {
                 leading: const Icon(Icons.edit),
                 title: const Text('Edit'),
                 onTap: () {
+                  log("${transaction.id}======================================");
                   Navigator.pop(context);
+                  Navigator.push(context, MaterialPageRoute(builder: (context) {
+                    return TransactionFormView(transaction: transaction);
+                  }));
                 },
               ),
               ListTile(
                 leading: const Icon(Icons.delete),
                 title: const Text('Delete'),
                 onTap: () {
-                  TransactionRepository().delete(id);
+                  TransactionRepository().delete(transaction.id);
                   Navigator.pop(context);
                 },
               ),
