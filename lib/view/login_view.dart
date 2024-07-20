@@ -137,10 +137,16 @@ class LoginView extends StatelessWidget {
     } on FirebaseAuthException catch (e) {
       if (e.code == 'user-not-found') {
         log('No user found for that email.');
-        _showMessage(context, 'email atau password tidak valid');
+        _showMessage(context, 'email atau password salah');
       } else if (e.code == 'wrong-password') {
         log('Wrong password provided for that user.');
-        _showMessage(context, 'email atau password tidak valid');
+        _showMessage(context, 'email atau password salah');
+      } else if (e.code == 'invalid-email') {
+        log(e.toString());
+        _showMessage(context, 'format email tidak valid');
+      } else {
+        log(e.toString());
+        _showMessage(context, e.toString());
       }
     }
   }
