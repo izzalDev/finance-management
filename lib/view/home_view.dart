@@ -6,12 +6,11 @@ import 'package:finance_management/view/transaction_detail_view.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:finance_management/widget/transaction_item.dart';
-import 'package:flutter/widgets.dart';
 import 'package:intl/intl.dart';
 import 'package:finance_management/view/transaction_form_view.dart';
 
 class HomeView extends StatefulWidget {
-  const HomeView({Key? key, required this.accountInfo}) : super(key: key);
+  const HomeView({super.key, required this.accountInfo});
 
   final User? accountInfo;
 
@@ -77,11 +76,11 @@ class HomeViewState extends State<HomeView> {
           }));
         },
         tooltip: 'Increment',
+        backgroundColor: Colors.lightBlue,
         child: const Icon(
           Icons.add,
           color: Colors.white,
         ),
-        backgroundColor: Colors.lightBlue,
       ),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -195,7 +194,7 @@ class HomeViewState extends State<HomeView> {
     showModalBottomSheet(
       context: context,
       builder: (BuildContext context) {
-        return Container(
+        return SizedBox(
           width: double.infinity,
           height: 200,
           child: ListView(
