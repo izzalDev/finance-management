@@ -44,12 +44,12 @@ class TransactionDetailView extends StatelessWidget {
             ),
             Padding(
               padding: const EdgeInsets.all(30),
-              child: Image.network(
-                'https://i.pinimg.com/originals/51/f4/32/51f43230dda0d1bf4b4bfc214c718b0d.jpg',
+              child: transaction.photo != null ? Image.network(
+                transaction.photo!,
                 fit: BoxFit.cover,
                 height: 180,
                 width: 400,
-              ),
+              ):const SizedBox(),
             ),
             const Divider(color: Colors.black, thickness: 1),
             Center(
