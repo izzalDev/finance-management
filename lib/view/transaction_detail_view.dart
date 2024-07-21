@@ -30,8 +30,7 @@ class TransactionDetailView extends StatelessWidget {
           )),
       body: Padding(
         padding: const EdgeInsets.only(top: 50),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+        child: ListView(
           children: [
             Center(
               child: Text(
@@ -46,9 +45,7 @@ class TransactionDetailView extends StatelessWidget {
               padding: const EdgeInsets.all(30),
               child: transaction.photo != null ? Image.network(
                 transaction.photo!,
-                fit: BoxFit.cover,
-                height: 180,
-                width: 400,
+                fit: BoxFit.contain,
               ):const SizedBox(),
             ),
             const Divider(color: Colors.black, thickness: 1),
