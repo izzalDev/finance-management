@@ -12,15 +12,15 @@ The Financial Management App is a Flutter-based application designed to help use
 - **Transaction Data List and Last Balance**
   - [x] View the list of transactions with details such as Transaction Name, Transaction Date, and Transaction Amount.
   - [x] Calculate the balance from total income minus total expenses.
-  - [ ] View detailed transaction information, including an image upload feature.
+  - [x] View detailed transaction information, including an image upload feature.
 
 - **Add New Transaction with Image Attachment**
-  - [ ] Input details such as Transaction Name, Transaction Date, Amount, Transaction Type, Transaction Category, File (image), and Description.
-  - [ ] Save the new transaction to the server and update the transaction list.
+  - [x] Input details such as Transaction Name, Transaction Date, Amount, Transaction Type, Transaction Category, File (image), and Description.
+  - [x] Save the new transaction to the server and update the transaction list.
 
 - **Edit and Delete Transactions**
-  - [ ] Long tap on a transaction item to display the contextual menu for editing or deleting.
-  - [ ] Edit transaction details with a pre-populated form and save changes to the server.
+  - [x] Long tap on a transaction item to display the contextual menu for editing or deleting.
+  - [x] Edit transaction details with a pre-populated form and save changes to the server.
   - [x] Delete transaction data from the server.
 
 ## Installation (APK)
