@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:finance_management/model/transaction.dart';
@@ -19,6 +21,7 @@ class _TransactionFormViewState extends State<TransactionFormView> {
   final TextEditingController _descriptionController = TextEditingController();
   final TextEditingController _filenameController = TextEditingController();
   final TextEditingController _dateController = TextEditingController();
+  FilePickerResult? _filePickerResult;
   DateTime? _selectedDate;
   String? _selectedCategory = 'Debit';
 
@@ -29,7 +32,6 @@ class _TransactionFormViewState extends State<TransactionFormView> {
       _nameController.text = widget.transaction!.name;
       _amountController.text = widget.transaction!.amount.toString();
       _descriptionController.text = widget.transaction!.description;
-      _filenameController.text = widget.transaction!.photo;
       _selectedDate = widget.transaction!.date;
       _dateController.text = _formatDate(_selectedDate!);
       _selectedCategory = widget.transaction!.category;
@@ -164,7 +166,9 @@ class _TransactionFormViewState extends State<TransactionFormView> {
               width: double.infinity,
               alignment: Alignment.center,
               child: Text(
-                widget.transaction == null ? 'Buat Transaksi' : 'Ubah Transaksi',
+                widget.transaction == null
+                    ? 'Buat Transaksi'
+                    : 'Ubah Transaksi',
                 style: const TextStyle(
                   fontSize: 20,
                   color: Colors.white,
@@ -185,6 +189,7 @@ class _TransactionFormViewState extends State<TransactionFormView> {
     if (result != null) {
       setState(() {
         _filenameController.text = result.files.single.name;
+        _filePickerResult = result;
       });
     }
   }
@@ -194,10 +199,10 @@ class _TransactionFormViewState extends State<TransactionFormView> {
     return dateFormatter.format(dateTime);
   }
 
-  void save() {
-    if (_nameController.text.isEmpty || 
-        _amountController.text.isEmpty || 
-        _selectedCategory == null || 
+  void save() async {
+    if (_nameController.text.isEmpty ||
+        _amountController.text.isEmpty ||
+        _selectedCategory == null ||
         _selectedDate == null) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Silakan lengkapi semua field.')),
@@ -211,16 +216,28 @@ class _TransactionFormViewState extends State<TransactionFormView> {
       amount: int.parse(_amountController.text),
       category: _selectedCategory!,
       description: _descriptionController.text,
-      photo: _filenameController.text,
     );
 
     if (widget.transaction == null) {
-      TransactionRepository().add(transaction);
+      await TransactionRepository().add(transaction);
     } else {
       transaction.id = widget.transaction!.id;
-      TransactionRepository().update(transaction);
+      await TransactionRepository().update(transaction);
+    }
+
+    if (_filePickerResult != null) {
+      await TransactionRepository().updatePhoto(
+          transaction, File(_filePickerResult!.files.single.path!));
     }
 
     Navigator.pop(context);
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(widget.transaction == null
+            ? 'Transaksi baru telah dibuat.'
+            : 'Transaksi telah diperbarui.'),
+      ),
+    );
   }
 }

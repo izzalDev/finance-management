@@ -1,6 +1,5 @@
 import 'dart:convert';
 
-import 'package:flutter/foundation.dart';
 
 class Transaction {
   int amount;
@@ -8,7 +7,7 @@ class Transaction {
   DateTime date;
   String description;
   String name;
-  String photo;
+  String? photo;
   late String id;
 
   Transaction({
@@ -17,7 +16,7 @@ class Transaction {
     required this.date,
     required this.description,
     required this.name,
-    required this.photo,
+    this.photo,
   });
 
   factory Transaction.fromRawJson(String str) =>
