@@ -1,6 +1,6 @@
 # CHANGELOG.md
 
-## 1.0.2 (2023-11-21)
+## 1.0.4 (2023-11-21)
 
 [Full Changelog](https://github.com/izzalDev/finance-management/compare/v0.1.32...v1.0.0)
 
