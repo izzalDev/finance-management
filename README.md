@@ -2,7 +2,7 @@
 
 The Financial Management App is a Flutter-based application designed to help users manage their personal finances efficiently. This app includes features for user registration and login, viewing and managing transactions, and attaching images to transaction records.
 
-## Features (WIP)
+## Features
 
 - **User Registration and Login**
   - [x] Create a new account with Full Name, Email, Phone Number, and Password.
