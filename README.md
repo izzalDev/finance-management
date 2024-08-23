@@ -136,7 +136,7 @@ This project is licensed under the MIT License. See the [LICENSE](LICENSE) file 
 
 ## Contact
 
-For any inquiries or support, please reach out to us at <rizal.fadlullah@gmail.com>.
+For any inquiries or support, please reach out to us at <rizalfadlullah@gmail.com>.
 
 ---
 
