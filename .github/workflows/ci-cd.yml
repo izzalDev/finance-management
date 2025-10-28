@@ -22,7 +22,9 @@ jobs:
           flutter-version-file: pubspec.yaml
 
       - name: Check Flutter version
-        run: flutter --version
+        run: |
+          flutter doctor --verbose
+          java --version
 
       - name: Run Flutter test
         run: |
