@@ -115,14 +115,15 @@ class _TransactionFormViewState extends State<TransactionFormView> {
           const SizedBox(height: 20),
           DropdownSearch<String>(
             selectedItem: _selectedCategory ?? 'Debit',
-            items: const ['Top up', 'Tagihan', 'Tiket', 'Debit', 'Transfer'],
+            items: (_, __) =>
+                ['Top up', 'Tagihan', 'Tiket', 'Debit', 'Transfer'],
             onChanged: (value) {
               setState(() {
                 _selectedCategory = value!;
               });
             },
-            dropdownDecoratorProps: const DropDownDecoratorProps(
-              dropdownSearchDecoration: InputDecoration(
+            decoratorProps: const DropDownDecoratorProps(
+              decoration: InputDecoration(
                 labelText: 'Kategori',
                 border: OutlineInputBorder(),
               ),
